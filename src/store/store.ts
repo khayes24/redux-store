@@ -4,13 +4,13 @@
 export class Store {
   private subscribers: Function[];
   private reducers: { [key: string]: Function };
-
   private state: { [key: string]: any };
 
 
   constructor(reducers = {}, initialState = {}) {
-    this.state = initialState;
     this.reducers = reducers;
+    this.subscribers = [];
+    this.state = this.reduce(initialState, {});
   }
 
   //Typescript Get Property
@@ -18,8 +18,22 @@ export class Store {
     return this.state;
   }
 
+  subscribe(fn) {
+    this.subscribers = [...this.subscribers, fn];
+    this.notify();
+    return () => {
+      this.subscribers = this.subscribers.filter(sub => sub !== fn)
+    }
+  }
+
   dispatch(action) {
-    this.state = this.reduce(this.state, action)
+    this.state = this.reduce(this.state, action);
+    this.notify();
+  }
+
+  //Anytime this.notify loop through subscriber list and pass new state
+  private notify() {
+    this.subscribers.forEach(fn => fn(this.value));
   }
 
   private reduce(state, action){

@@ -1,6 +1,6 @@
 export const initialState = {
   loaded: false,
-  loading: true,
+  loading: false,
   data: [{ label: 'Eat Pizza', complete: false}]
 };
 
