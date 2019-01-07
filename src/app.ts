@@ -23,10 +23,7 @@ button.addEventListener(
     const payload = { label: input.value, complete: false };
 
     //Create action
-    store.dispatch({
-      type: 'ADD_TODO',
-      payload //ES6 allows you to create an object prop. with the same name as a const just by listing the name once
-    });
+    store.dispatch(new fromStore.AddTodo(payload));
 
     console.log(store.value);
 
@@ -45,6 +42,8 @@ todoList.addEventListener('click', function(event) {
   const target = event.target as HTMLButtonElement;
   if (target.nodeName.toLowerCase() === 'button') {
     console.log(target);
+    const todo = JSON.parse(target.getAttribute('data-todo') as any);
+    store.dispatch(new fromStore.RemoveTodo(todo));
   }
 });
 
